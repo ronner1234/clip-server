@@ -1,11 +1,11 @@
 services:
   clip-server:
-    image: jinaai/clip-server:0.8.2
+    image: jinaai/clip-server
     ports:
       - "51009:51000"
     volumes:
-      - "${HOME}/.cache:/home/cas/.cache"
-      - "./config.yml:/config.yml"  # Mount the file so it's accessible
+      - clip_cache:/home/cas/.cache         # Docker-managed volume (safe!)
+      - ./my.yml:/my.yml:ro                 # Read-only mount of your config file
     deploy:
       resources:
         reservations:
@@ -13,6 +13,9 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-    entrypoint: [ "sh", "-c", "cat /config.yml | python -m clip_server -i" ]
+    entrypoint: [ "sh", "-c", "cat /my.yml | python -m clip_server -i" ]
     stdin_open: true
     tty: true
+
+volumes:
+  clip_cache:

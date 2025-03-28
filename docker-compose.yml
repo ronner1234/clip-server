@@ -1,0 +1,18 @@
+services:
+  clip-server:
+    image: jinaai/clip-server:0.8.2
+    ports:
+      - "51009:51000"
+    volumes:
+      - "${HOME}/.cache:/home/cas/.cache"
+      - "./config.yml:/config.yml"  # Mount the file so it's accessible
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    entrypoint: [ "sh", "-c", "cat /config.yml | python -m clip_server -i" ]
+    stdin_open: true
+    tty: true

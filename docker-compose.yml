@@ -16,4 +16,3 @@ services:
     entrypoint: [ "sh", "-c", "cat /config.yml | python -m clip_server -i" ]
     stdin_open: true
     tty: true
-    user: "1000:1000"

@@ -4,8 +4,9 @@ services:
     ports:
       - "51009:51000"
     volumes:
-      - clip_cache:/home/cas/.cache         # Docker-managed volume (safe!)
-      - ./my.yml:/my.yml:ro                 # Read-only mount of your config file
+      - clip_cache:/home/cas/.cache
+      - ./my.yml:/my.yml:ro
+      - ./entrypoint.sh:/entrypoint.sh:ro
     deploy:
       resources:
         reservations:
@@ -13,7 +14,7 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-    entrypoint: [ "sh", "-c", "cat /my.yml | python -m clip_server -i" ]
+    entrypoint: [ "sh", "/entrypoint.sh" ]
     stdin_open: true
     tty: true
 
